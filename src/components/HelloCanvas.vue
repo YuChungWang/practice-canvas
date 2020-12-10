@@ -1,7 +1,7 @@
 <template>
   <div class="hello-canvas">
-    <h2>Hello Canvas</h2>
-    <canvas id="canvas" width="1334" height="750" ref="canvas" />
+    <div class="machine" />
+    <canvas ref="canvas" class="canvas" />
   </div>
 </template>
 
@@ -9,7 +9,22 @@
 export default {
   name: 'HelloCanvas',
 
+  data() {
+    return {
+      frameWidth: 1334,
+      frameHeight: 750,
+      numberOfFrames: 25,
+      frameIndex: 0,
+      lastUpdate: 0,
+      timePerFrame: 20,
+    }
+  },
+
   methods: {
+    setCanvasSize() {
+      this.$refs.canvas.width = this.frameWidth;
+      this.$refs.canvas.height = this.frameHeight;
+    },
     gameLoop() {
       if(Date.now() - this.lastUpdate >= this.timePerFrame) {
         this.frameIndex++;
@@ -40,17 +55,11 @@ export default {
   },
 
   mounted() {
-    this.ctx = this.$refs.canvas.getContext('2d');
-
     this.img = new Image();
     this.img.src = 'https://dlgarenanow-a.akamaihd.net/mgames/kgtw/events/202007TelCgacha/cdn/animation/animation-arrow-light.jpg';
 
-    this.frameWidth = 1334;
-    this.frameHeight = 750;
-    this.numberOfFrames = 25;
-    this.frameIndex = 0;
-    this.lastUpdate = 0;
-    this.timePerFrame = 20;
+    this.ctx = this.$refs.canvas.getContext('2d');
+    this.setCanvasSize();
 
     this.img.onload = () => {
       this.gameLoop();
@@ -59,6 +68,26 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.hello-canvas {
+  position: relative;
+  width: 1334px;
+  height: 750px;
 
+  .machine {
+    position: absolute;
+    bottom: 0;
+    left: calc(50% - 401px);
+    width: 802px;
+    height: 750px;
+    background: url('https://dlgarenanow-a.akamaihd.net/mgames/kgtw/events/202007TelCgacha/cdn/animation/animation-machine.png')
+  }
+
+  .canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    mix-blend-mode: screen;
+  }
+}
 </style>
